@@ -34,16 +34,9 @@ public class ChatRoom {
 
     private void handleNewClient(Socket clientSocket) {
         try {
-            // Get the username from the client
             String username = getUsernameFromClient(clientSocket);
-
-            // Add the client to the clientsMap
             clientsMap.put(clientSocket, username);
-
-            // Broadcast the new client's arrival to all other clients
             broadcastMessage(username + " has joined the chat room.");
-
-            // Start a new thread to handle the client's messages
             Thread thread = new Thread(new ClientHandler(clientSocket, this), "Client Handler");
             thread.start();
         } catch (IOException e) {
@@ -54,8 +47,6 @@ public class ChatRoom {
     private String getUsernameFromClient(Socket clientSocket) throws IOException {
         DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());
         DataOutputStream outputStream = new DataOutputStream(clientSocket.getOutputStream());
-
-        // Prompt the client to enter a username
         outputStream.writeUTF("Please enter a username: ");
         return inputStream.readUTF();
     }
@@ -113,10 +104,5 @@ public class ChatRoom {
         }
     }
 
-    public class Main {
-        public static void main(String[] args) {
-            ChatRoom chatRoom = new ChatRoom(4321);
-            chatRoom.start();
-        }
-    }
+
 }
